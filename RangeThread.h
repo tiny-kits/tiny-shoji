@@ -2,7 +2,7 @@
 #define RANGE_THREAD_H
 
 #include "src/omilli/Thread.h"
-#include "tiny-shoji.h"
+#include "om-ranger.h"
 #include "Accel3Thread.h"
 #include "src/fastled/FastLED.h"
 
@@ -47,7 +47,7 @@ protected:
     uint16_t msLoop;
     void loop();
     RangeType rng = RNG_UNKNOWN;
-    uint32_t minRange = 30L;   // Disregard enclosure ghosts
+    uint32_t minRange = 50L;   // Disregard close noise
     uint32_t maxRange = 2500L; // Max ranging white target indoors + 500
     int32_t eaDistFast = 0;    
     int32_t eaDistSlow = 0;

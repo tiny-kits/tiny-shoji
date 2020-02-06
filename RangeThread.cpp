@@ -23,7 +23,7 @@ VL53L0X distanceSensor;
 #define STEP_TC 0.5
 #define STEP_LOOPS 5
 #define MS_MODELOCK 1000 /* For modes with timeouts */
-#define MS_MODELOCK_STARTUP 10000
+#define MS_MODELOCK_STARTUP 3000
 #define DEG_HORIZONTAL 10
 #define STEADY_IDLE_MS 500
 #define PITCH_SELFTEST 80
@@ -33,7 +33,7 @@ VL53L0X distanceSensor;
 #define MS_INTERMEASUREMENT 1
 #define CAL_FLOOR_DT 400L
 #define CALIBRATION_DELTA 30
-#define MAX_DIST_ERR 50
+#define MAX_DIST_ERR 5
 #define NOTIFY_STARTUP_DEFAULT 0
 #define NOTIFY_STARTUP_SELFTEST 1
 #define NOTIFY_STARTUP_CALIBRATE 2
@@ -322,6 +322,8 @@ void RangeThread::startup() {
     }
 }
 
+int16_t dd[16];
+
 void RangeThread::loop() {
     nextLoop.ticks = om::ticks() + MS_TICKS(msLoop);
     om::setI2CPort(port); 
@@ -334,6 +336,7 @@ void RangeThread::loop() {
         pz->heading==HEADING_STEADY;
     if (!steady) { msUnsteady = msNow; }
     uint16_t d = distanceSensor.readRangeContinuousMillimeters();
+    dd[loops % 16] = d;
     if (d < minRange) {
         d = maxRange;
     }
@@ -391,13 +394,10 @@ void RangeThread::loop() {
         om::print(" ");
         om::print(notifyStr[(uint8_t)lastNotify]);
         om::print(" d");
-        om::print(d);
-        om::print(" errFast:");
-        om::print(errFast);
-        om::print(" errSlow:");
-        om::print(errSlow);
-        om::print(" distStick:");
-        om::print(distStick);
+        for (int i = 0; i < 16; i++) {
+          om::print(" ");
+          om::print(dd[i]);
+        }
         om::print(" pitch:");
         om::print(pitch);
         for (int ix = 0; ix < HEADING_COUNT; ix++) {
