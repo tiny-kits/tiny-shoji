@@ -1,2 +1,3 @@
-# tiny-shoji
-A bedside gesture-dimmable LED lamp
+# TinyShoji - A Gesture-dimmable Bedside LED Lamp
+
+(Coming soon)

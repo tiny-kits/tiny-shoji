@@ -1,0 +1,35 @@
+{
+  "name": "tiny-shoji",
+  "version": "0.1.0",
+  "description": "A gesture-dimmable bedside LED lamp",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+  },
+  "scripts": {
+  },
+  "repository": {
+    "tag": "git"
+  },
+  "bin": {},
+  "keywords": [
+    "TinyCircuits",
+    "TinyZero",
+    "Time-of-flight",
+    "TOF",
+    "Infrared Laser",
+    "Haptic",
+    "3-Axis accelerometer", 
+    "Atmel ATSAMD21G18A",
+    "OMilli",
+    "Shoji Lamp",
+    "Arduino"
+  ],
+  "author": "Karl Lew",
+  "homepage": "https://github.com/tiny-kits/tiny-shoji",
+  "license": "MIT"
+}
