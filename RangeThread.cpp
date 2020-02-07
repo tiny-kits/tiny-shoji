@@ -7,9 +7,7 @@
 #include "src/omilli/Thread.h"
 #include <Wireling.h>   // For interfacing with Wirelings
 #include "Accel3Thread.h"
-#include "OLED042Thread.h"
 #include "LEDThread.h"
-#include "LraThread.h"
 #include "RangeThread.h"
 
 using namespace om;
@@ -95,8 +93,6 @@ void RangeThread::notify(NotifyType value, int8_t level) {
     switch (value) {
     case NOTIFY_STARTUP:
         if (loopsNotify == loops) {
-            lraThread.setEffect(
-                DRV2605_TRANSITION_RAMP_DOWN_LONG_SMOOTH_1); 
         }
         if (mod16 == 0) {
             brightness = 0xff;
@@ -116,7 +112,6 @@ void RangeThread::notify(NotifyType value, int8_t level) {
         break;
     case NOTIFY_SWEEP:
         if (mod16 % 0 == 0) {
-            lraThread.setEffect(0); 
             led = CRGB(0,0,0);
             brightness = 0;
         }
@@ -124,8 +119,6 @@ void RangeThread::notify(NotifyType value, int8_t level) {
     case NOTIFY_SLEEP:
         showLed = SHOWLED_FADE50;
         if (loopsNotify == loops) {
-            lraThread.setEffect(    
-                DRV2605_TRANSITION_RAMP_DOWN_LONG_SMOOTH_1); 
             led = CRGB(0xff,0xff,0xff);
             brightness = 0xff;
         } else if (loops - loopsNotify == 1) {
@@ -144,7 +137,6 @@ void RangeThread::notify(NotifyType value, int8_t level) {
         break;
     case NOTIFY_INCOMING:
         if (mod16 == 0) {
-            lraThread.setEffect(DRV2605_STRONG_CLICK_100); 
             led = CRGB(0xff,0,0);
             brightness = 0xff;
         }
@@ -152,23 +144,18 @@ void RangeThread::notify(NotifyType value, int8_t level) {
     case NOTIFY_TOUCHING:
         if (mod24 == 0) {
             showLed = SHOWLED_FADE85;
-            lraThread.setEffect(DRV2605_STRONG_CLICK_100); 
             led = CRGB(0xff,0xff,0);
             brightness = 0xff;
         } else if (level!=1 && level!=3 && mod24 % 12 == 0) { // 2/4
-            lraThread.setEffect(DRV2605_SHARP_TICK_1); 
             led = CRGB(0xff,0,0);
             brightness = 0x80;
         } else if (level == 3 && mod24 % 8 == 0) {  // 3/4
-            lraThread.setEffect(DRV2605_SHARP_TICK_3); 
             led = CRGB(0xff,0,0);
             brightness = 0x80;
         } else if (level == 4 && mod24 % 6 == 0) {  // 4/4
-            lraThread.setEffect(DRV2605_SHARP_TICK_3); 
             led = CRGB(0xff,0,0);
             brightness = 0x80;
         } else if (level == 5 && mod24 % 4 == 0) {  // 6/8
-            lraThread.setEffect(DRV2605_SHARP_TICK_3); 
             led = CRGB(0xff,0,0);
             brightness = 0x80;
         }
@@ -176,18 +163,15 @@ void RangeThread::notify(NotifyType value, int8_t level) {
     case NOTIFY_BUSY:
         if (mod24 == 0) {
             showLed = SHOWLED_FADE85;
-            lraThread.setEffect(DRV2605_STRONG_CLICK_100); 
             led = CRGB(0xff,0,0xff);
             brightness = 0xff;
         } else if (mod24 % 6 == 0) {
-            lraThread.setEffect(DRV2605_SHARP_TICK_3); 
             led = CRGB(0,0,0xff);
             brightness = 0x80;
         }
         break;
     case NOTIFY_OK:
         if (mod48 == 0) {
-            lraThread.setEffect(DRV2605_SOFT_FUZZ_60); 
             led = CRGB(0,0xff,0);
             brightness = 0xff;
         }
@@ -197,11 +181,9 @@ void RangeThread::notify(NotifyType value, int8_t level) {
     case NOTIFY_ERANGE: // SOSOSOSOS...
         showLed = SHOWLED_FADE50;
         if (mod64==0 || mod64==4 || mod64==8) {
-            lraThread.setEffect(DRV2605_SHARP_TICK_1); 
             led = CRGB(0xff,0,0);
             brightness = 0xff;
         } else if (mod64==22 || mod64==34 || mod64==46) {
-            lraThread.setEffect(DRV2605_SHARP_TICK_1); 
             led = CRGB(0xff,0,0);
             brightness = 0xff;
         }
@@ -302,14 +284,6 @@ void RangeThread::setMode(ModeType newMode, bool force) {
         break;
     }
     mode = newMode;
-}
-
-void RangeThread::updateOledPosition() {
-    // Update OLED position display
-    strcpy(oledThread.lines[1], "");
-    px->headingToString(oledThread.lines[2]);
-    py->headingToString(oledThread.lines[3]);
-    pz->headingToString(oledThread.lines[4]);
 }
 
 void RangeThread::startup() {
@@ -418,7 +392,6 @@ void RangeThread::loop() {
         selftest(d);
     } else if (mode == MODE_SWEEP) {
         sweep(eaDistSlow);
-        updateOledPosition();
     } else if (mode == MODE_CALIBRATE) {
         calibrateLength(d);
     } else if (mode == MODE_SLEEP) {

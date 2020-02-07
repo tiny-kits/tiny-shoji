@@ -2,7 +2,7 @@
 #define RANGE_THREAD_H
 
 #include "src/omilli/Thread.h"
-#include "om-ranger.h"
+#include "tiny-shoji.h"
 #include "Accel3Thread.h"
 #include "src/fastled/FastLED.h"
 
@@ -70,7 +70,6 @@ protected:
     void calibrateLength(uint16_t dist);
     void startup();
     void setMode(ModeType mode, bool force=false);
-    void updateOledPosition();
     void notify(NotifyType value, int8_t level=0);
 } RangeThread;
 
